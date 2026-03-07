@@ -1,449 +1,69 @@
-export const kpis = [
-  {
-    title: "Total Revenue",
-    value: "$4,820,500",
-    icon: "account_balance_wallet",
-    change: "+12.5%",
-    isPositive: true,
-  },
-  {
-    title: "Monthly Sales",
-    value: "14,290",
-    icon: "shopping_cart",
-    change: "+8.2%",
-    isPositive: true,
-  },
-  {
-    title: "Net Profit",
-    value: "$942,000",
-    icon: "trending_up",
-    change: "+4.1%",
-    isPositive: true,
-  },
-  {
-    title: "Productivity",
-    value: "94/100",
-    icon: "bolt",
-    change: "-2.4%",
-    isPositive: false,
-  },
-  {
-    title: "Active Users",
-    value: "1,240",
-    icon: "group",
-    change: "+10%",
-    isPositive: true,
-  },
+export const REQUIRED_DATASET_FIELDS = [
+  "Employee_ID",
+  "Department",
+  "JobRole",
+  "Age",
+  "MonthlyIncome",
+  "PerformanceRating",
+  "JobSatisfaction",
+  "Attrition",
 ];
 
-export const departments = [
-  { name: "Sales Ops", score: 92, colorClass: "bg-primary" },
-  { name: "Engineering", score: 78, colorClass: "bg-slate-300" },
-  { name: "Customer Success", score: 81, colorClass: "bg-slate-200" },
+export const DATE_RANGE_OPTIONS = [
+  { value: "30d", label: "Last 30 days", months: 3 },
+  { value: "90d", label: "Last 90 days", months: 6 },
+  { value: "180d", label: "Last 180 days", months: 9 },
+  { value: "365d", label: "Last 12 months", months: 12 },
 ];
 
-export const staffMembers = [
-  {
-    name: "Sarah Connor",
-    department: "Sales & Growth",
-    productivity: 94,
-    status: "Active",
-    statusTone: "active",
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDPcEWizDepWpkYhtULtHBJ8nvWroX4NFQIREzpkdEJSRAdmgx51yJrdEcBJI1LKuCYDlIH7bidy4FjoDUA_7JjLAcrUbqnD0znQFip43yZxr04am1ggmZYkXS9i6OmJffnw1e4E6zbz1vUpMglwOmMyNXzOZ1mZbvOtF_b82TlYQOFEsdvmAVpbkfAw0EidAAKrga5qj0u1Nh7pILM4gVfAn367TT0pE6pMfwE8_iEjQODSHNwyQZ4znMCnii8mMZroNudwn_ywQ8",
-  },
-  {
-    name: "Markus Wright",
-    department: "Operations",
-    productivity: 88,
-    status: "Active",
-    statusTone: "active",
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB8tbGSMNFGXb6LntLq4tRtfDULmfOQsLof_DrA-6HhBLmxk3FEs5GJRwKG4g8qqHdf59NFLJEvt4GwJladsvq2c_7lUJgWqHS6JYj6iBXW0yUXE__EEh_RB82HN4YXFzXRrCG-wkVHTWcxx8IKYEZsgDipsxDhdp-YM5Cy6-N0lQyGCLGmCR3Q7go17B3DXPLXGDE1L5FdCU4lGm8oUzomJmA105TvSxeDM9QBCoUwDTGUJOitfLQk7ct33Qi668O0GDxFXhOHUww",
-  },
-  {
-    name: "Elena Fisher",
-    department: "Research",
-    productivity: 62,
-    status: "In Meeting",
-    statusTone: "neutral",
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDFLKvu1MWF5x90HWOCJanz9pe6hD7Yol2QfUpP1lxVqDj861UJ-YjB4G6FSuN9rWuENCdjD8iTG9SGAZ37UHbIyVd3czcPhdmDtdr6cDaVu6PYP1DZZAnRPqvEd-ebmIEsrNN9zeHOo_INz7-OboVcGsuWf1FI0u3_KkUJdk-9wA3pIz_SwMwN5DxDqdb-QqCbEAA9DkOdYmebKBOM0shUj8uNC70k5CyyG6sRr9KhT0imLkcutOI5JUkvB4NAB5JIqWc0TwPQSok",
-  },
+export const DEPARTMENT_CHART_COLORS = [
+  "#6366f1",
+  "#06b6d4",
+  "#f97316",
+  "#22c55e",
+  "#e879f9",
+  "#f59e0b",
+  "#ef4444",
+  "#14b8a6",
 ];
 
-export const insights = [
-  {
-    title: "Revenue target reached",
-    description:
-      "Q3 revenue goals have been met 2 weeks ahead of schedule.",
-    tone: "success",
-    icon: "check_circle",
-  },
-  {
-    title: "Server load spikes",
-    description:
-      "Operational systems in Region 4 are showing 15% higher latency.",
-    tone: "warning",
-    icon: "warning",
-  },
-  {
-    title: "New report available",
-    description: "The monthly HR performance audit is ready for review.",
-    tone: "info",
-    icon: "info",
-  },
+export const VIBRANT_CHART_COLORS = [
+  "#8b5cf6",
+  "#22d3ee",
+  "#f43f5e",
+  "#10b981",
+  "#f59e0b",
+  "#3b82f6",
+  "#84cc16",
+  "#fb7185",
 ];
 
-export const salesKpis = [
-  {
-    title: "Total Revenue",
-    value: "$1,284,500.00",
-    detail: "Compared to $1.14M last month",
-    icon: "payments",
-    iconClass: "bg-primary/10 text-primary",
-    trendIcon: "trending_up",
-    change: "12.5%",
-    changeClass: "bg-emerald-50 text-emerald-600",
-  },
-  {
-    title: "Avg. Order Value",
-    value: "$142.50",
-    detail: "Slight decrease in seasonal bundles",
-    icon: "shopping_cart",
-    iconClass: "bg-slate-500/10 text-slate-600",
-    trendIcon: "trending_down",
-    change: "2.1%",
-    changeClass: "bg-rose-50 text-rose-600",
-  },
-  {
-    title: "Conversion Rate",
-    value: "3.4%",
-    detail: "Optimized checkout performance",
-    icon: "ads_click",
-    iconClass: "bg-amber-500/10 text-amber-600",
-    trendIcon: "trending_up",
-    change: "0.8%",
-    changeClass: "bg-emerald-50 text-emerald-600",
-  },
-];
-
-export const salesMonths = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-export const regionalDistribution = [
-  {
-    region: "North America",
-    amount: "$542,000",
-    progress: 75,
-    barClass: "bg-primary",
-  },
-  {
-    region: "Europe",
-    amount: "$389,000",
-    progress: 55,
-    barClass: "bg-primary/70",
-  },
-  {
-    region: "Asia Pacific",
-    amount: "$215,000",
-    progress: 35,
-    barClass: "bg-primary/50",
-  },
-  {
-    region: "Latin America",
-    amount: "$138,500",
-    progress: 20,
-    barClass: "bg-primary/30",
-  },
-];
-
-export const regionalMapImage =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuDaCp-i0Tk9TbJePH0Puw28Iv8dTgzAh7Z5-MT4hreOJIvn3KvFAx9L8BSZ3puIgOSPEWQg_L9emjJiNo6iTsoK04xEcdoYLW-u47hTqTjVSNOqDLKDAkkqVpCs8i3YRea7olKZBGEp9qLWhbuAY0lvTmmTVgA-eHuvs5VyDcfeo4wn3wlmSwW6Ioje04SO3Vbd51DFUfKoRK_b1_Jg3HgM6gGKoDTzwXElNATf7opYul_6hL3MiyeDA8NvBdA1YAdFwkqvg1Xw0e8";
-
-export const topProducts = [
-  {
-    name: "Ultra-Book Pro M2",
-    icon: "devices",
-    sales: "1,240",
-    revenue: "$248,000",
-    status: "Active",
-    statusTone: "active",
-  },
-  {
-    name: "Noise-Cancel Buds",
-    icon: "headphones",
-    sales: "890",
-    revenue: "$133,500",
-    status: "Active",
-    statusTone: "active",
-  },
-  {
-    name: "Smart Connect Gen 5",
-    icon: "watch",
-    sales: "540",
-    revenue: "$108,000",
-    status: "Low Stock",
-    statusTone: "warning",
-  },
-  {
-    name: "Laser Jet X-Series",
-    icon: "print",
-    sales: "320",
-    revenue: "$96,000",
-    status: "Active",
-    statusTone: "active",
-  },
-];
-
-export const reportTemplates = [
-  {
-    title: "Sales Report",
-    description: "Daily revenue, lead conversion, and sales pipeline growth.",
-    icon: "account_balance_wallet",
-    iconContainerClass: "bg-blue-100 text-blue-600",
-  },
-  {
-    title: "Quarterly Financials",
-    description: "Balance sheets, P&L statements, and cash flow analysis.",
-    icon: "analytics",
-    iconContainerClass: "bg-emerald-100 text-emerald-600",
-  },
-  {
-    title: "HR Annual Review",
-    description: "Employee performance, churn rates, and hiring metrics.",
-    icon: "badge",
-    iconContainerClass: "bg-violet-100 text-violet-600",
-  },
-  {
-    title: "Inventory Audit",
-    description: "Stock levels, warehouse efficiency, and logistics costs.",
-    icon: "inventory_2",
-    iconContainerClass: "bg-amber-100 text-amber-600",
-  },
-];
-
-export const recentReports = [
-  {
-    name: "Q3 Marketing Performance.pdf",
-    generatedAt: "Oct 24, 2023 • 14:20",
-    status: "Completed",
-    statusTone: "success",
-    author: "M. Sarah",
-    authorAvatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuASOXKWffF9NdpVOBXDY1PAnVPwOYPQ8WUit_XHbWuBEph8c0Zlcp4Eo-1FNVqZse8oFvbX3Wl6ieMKb-Ox5G2z6gPBz6o1SIVNYfppiGNWBBk-Q0dEYMoW-O-dBPgWXJ9n1UXe3GkaQ-k6JfFg0jrwt5XGbt18hHsdD7RJUaXB8Wp68h3odqoZlAMR-JTCLrlNAmRqW0_ho-pTSjR_jKf39wyZi2cjyJfmPfnVJG2yTFvyE8RuTLd2y3OjB_FMvRDcMog92ZWlMYs",
-    downloadable: true,
-  },
-  {
-    name: "Regional Sales Audit.xlsx",
-    generatedAt: "Oct 23, 2023 • 09:15",
-    status: "Completed",
-    statusTone: "success",
-    author: "T. James",
-    authorAvatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuACeJUotpKvmU3Q3ja1UFMV5beTvBoAGKp87QBIVi4bBr4bNfgPJ0gNVev8mr1eqXOLHsVUyWEWV2oOQ_KKektJaRNZ693bGm8ZxqO54dw9lG5gqe4A9jHiAZJ5-CxJTMgm1VOmKo6wtVUPbiqwDiXm8OvBr_nUnfelPIV0Eywczrsdz7o9T5SrZm58eVdfPek0CpI-JrJuEZjBfzZxq8dGm6X1Yngvegd309UgXS8MqtQeHyqcu2B6vZel_UWfwuEA3qh-c7wn0Ac",
-    downloadable: true,
-  },
-  {
-    name: "Annual HR Turnover Analytics.pdf",
-    generatedAt: "Oct 22, 2023 • 17:45",
-    status: "Pending",
-    statusTone: "warning",
-    author: "A. Rivera",
-    authorAvatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCqDZHB5dVv4b7dDQEgymXmH7Vi1cGbUzkw5HygXQ0CKwsFSsZKXyhCY-Fa5VTem-EKG_Kb1dVChCNB3ln-dwy_HyHvzGGUMUQT-w5FdGiVQAu3oPCQWm5jrMzCnDvG2Nv1O0YP6hnxSYGTulUJ8ZAIzGvFLYmyd0BQIsRGlYF31jj3lZUz_LA2uCKF9Pw881TIMVTUbecf7lsQFAbXEQA-9fSTErMeDUt_9zF2nFdaX99rAWNGdbZtABt6KBjhe-eElJZzOt3QsBE",
-    downloadable: false,
-  },
-  {
-    name: "Client Feedback Summary Q2.csv",
-    generatedAt: "Oct 21, 2023 • 11:00",
-    status: "Completed",
-    statusTone: "success",
-    author: "R. Kim",
-    authorAvatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAysOVGux7oy1tK96IcpZBsh-XSbTY7VsL5hDzrcc-voTSz4-CA-rdr9hnZNKSqWCYD2L5tQGGu5qpSrioCk0YVPe1jQv_YhvGYKdHsZjLcbQR0t_JoGIH_5dta-WXjJkf6_w_rSSBUvhomceaz3Z0QeUtTtaDJpLaYZyqRxgUe9AFcggfHZAn2SuP0zyaVj9YG7R4fAHQ1WI3OhEA4PvR6yA9N3ccrgaaVy03WLj1tpZb7SizOaQG6K5eAmLgFvGczQP8tZst92p8",
-    downloadable: true,
-  },
-];
-
-export const financeKpis = [
-  {
-    title: "Net Profit",
-    value: "$4,250,000",
-    change: "+12.5%",
-    changeTone: "positive",
-    progress: 75,
-  },
-  {
-    title: "Operating Margin",
-    value: "24.8%",
-    change: "+2.1%",
-    changeTone: "positive",
-    progress: 48,
-  },
-  {
-    title: "Cash Flow",
-    value: "$1,120,000",
-    change: "-0.4%",
-    changeTone: "negative",
-    progress: 32,
-  },
-];
-
-export const revenueExpenseBars = [
-  { month: "JAN", expenses: 40, revenue: 60 },
-  { month: "FEB", expenses: 35, revenue: 65 },
-  { month: "MAR", expenses: 45, revenue: 55 },
-  { month: "APR", expenses: 20, revenue: 80 },
-  { month: "MAY", expenses: 30, revenue: 70 },
-  { month: "JUN", expenses: 25, revenue: 75 },
-];
-
-export const budgetAllocation = {
-  utilization: 78,
-  items: [
-    { department: "Marketing", amount: "$1.2M", share: "32%", tone: "primary" },
-    { department: "R&D", amount: "$850K", share: "24%", tone: "mid" },
-    { department: "Operations", amount: "$420K", share: "12%", tone: "light" },
-  ],
+export const KPI_ICON_MAP = {
+  totalEmployees: "group",
+  attritionRate: "person_remove",
+  averageSalary: "payments",
+  averageJobSatisfaction: "sentiment_satisfied",
+  averagePerformanceRating: "workspace_premium",
+  averageWorkLifeBalance: "balance",
 };
 
-export const financeTransactions = [
+export const REPORT_LIBRARY = [
   {
-    id: "#TXN-9402",
-    date: "Oct 24, 2024",
-    counterparty: "AWS Services Inc.",
-    initials: "AS",
-    status: "Completed",
-    statusTone: "completed",
-    amount: "-$12,450.00",
-    amountTone: "default",
+    id: "department-performance",
+    name: "Department Performance Report",
+    description:
+      "Compare department productivity, satisfaction, and retention in one summary.",
   },
   {
-    id: "#TXN-8812",
-    date: "Oct 23, 2024",
-    counterparty: "Stripe Payout",
-    initials: "ST",
-    status: "Completed",
-    statusTone: "completed",
-    amount: "+$245,100.00",
-    amountTone: "positive",
+    id: "employee-retention",
+    name: "Employee Retention Report",
+    description:
+      "Track attrition drivers and retention risk by department and role.",
   },
   {
-    id: "#TXN-7734",
-    date: "Oct 23, 2024",
-    counterparty: "Global Logistics Corp",
-    initials: "G",
-    status: "Processing",
-    statusTone: "processing",
-    amount: "-$8,200.00",
-    amountTone: "default",
-  },
-  {
-    id: "#TXN-5521",
-    date: "Oct 22, 2024",
-    counterparty: "Quarterly Tax Payment",
-    initials: "Q",
-    status: "Completed",
-    statusTone: "completed",
-    amount: "-$125,000.00",
-    amountTone: "default",
-  },
-];
-
-export const performanceKpis = [
-  {
-    title: "Productivity Score",
-    value: "87.4%",
-    suffix: "avg.",
-    change: "+2.1%",
-    changeTone: "positive",
-    detailType: "progress",
-    progress: 87.4,
-  },
-  {
-    title: "Active Employees",
-    value: "1,248",
-    suffix: "headcount",
-    change: "-0.5%",
-    changeTone: "negative",
-    detailType: "avatars",
-    avatarOverflow: "+1.2k",
-    avatars: [
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBUebFIEtJlptpfoC8ompyp988oIZY2_J8IyUQjnOTV4ZeeSrysPyPJl_A70yJLpZ-_mmSF25WuMenMMLDEj8RBpIiYj33crOMsIPCo8nUcZDmYfeaUZDpsg6sG-aY31E2lS_2mpkBc40O-zVwEql4ck1B86m_rjnO6-jXdD-bLN2UL-EuwoG114nTXRqsS-DQbp_AeL_Lh1HLZpo3Mc-3ioyicylZbw_ZfNaUXbvwu-oIzMvk8B9AhTlDgAz13hypvgzr6LDuH1KM",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCSfQp7HFh7-_7SbdWyLsQ_a3BiypwOVrey5F3D6S6ewOx2i3C7ldlVwW4DY6Cve89voWB0K-V80mJ7-T6GTFQr1WFhLYJ-TWFnNorOWxjnWooyFBqwS9z9upvKCPVvMoonDcHc9YhsVFrZZdn1PXAprQz0TfXFeSJswX29ir7bdzZT6mQv8aINN5SLb59XQPdkY3xqJCTE5N6193EY1Apmu5SaG_1uL5RacdooWPODtagTixS0D-d32ij5bKNLfZlkxmkZUb6o0Fc",
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCyI6MkImhwzRfCXZvAJFN4BkD6IMqWpz_GFOxB4tDUCKhTboDkkd5Iz8GBid6nSIyypWAh1jlX8m8OGviAiuNHrRCeaBgJDcZ7dtfJJIbuVZXPAKuNNYDGzVS7yaufx1LfcUPfFnC3e5zCAbtlyKqRQbQMUiAGWbF6EIWZCOd8RoPQbBBjGlHvhFBFhLtsMg9C2TOeF_sdCiWpS0djUmX2z4QLmtoK7T_BdvODMjvPdiPyeVMnYxosmBR0ZWpqfldV-9PdWpuslkQ",
-    ],
-  },
-  {
-    title: "Turnover Rate",
-    value: "4.2%",
-    suffix: "annualized",
-    change: "-1.2%",
-    changeTone: "positive",
-    detailType: "note",
-    note: "Exceeding industry benchmark by 1.8%",
-  },
-];
-
-export const productivityTrendData = [
-  { month: "Jan", height: 128 },
-  { month: "Feb", height: 160 },
-  { month: "Mar", height: 144 },
-  { month: "Apr", height: 192 },
-  { month: "May", height: 224 },
-  { month: "Jun", height: 240 },
-];
-
-export const departmentEfficiency = [
-  { name: "Engineering", score: 92, barClass: "bg-blue-500" },
-  { name: "Design", score: 88, barClass: "bg-indigo-500" },
-  { name: "Marketing", score: 76, barClass: "bg-purple-500" },
-  { name: "Operations", score: 81, barClass: "bg-emerald-500" },
-  { name: "Sales", score: 95, barClass: "bg-orange-500" },
-];
-
-export const topPerformers = [
-  {
-    name: "Sarah Jenkins",
-    role: "Senior Lead Developer",
-    department: "Engineering",
-    departmentClass: "bg-blue-50 text-blue-600",
-    completionRate: "98.4%",
-    rating: 5,
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCjh41zwIJkaiZ2iOaaRa0IZLNrjjE19-w_YgWmf3-4EkKND7FVR_kIHAnbJmmnL4B1VGnfCjH8TyEdx8T9P8FqACHnx1A9Z9j1ihEZNjUVizv_pDSYmJZHFfZIilmI3pTbWd58ZVWt8xNQSKjP9oWQB52aNpofgMKYmxbHwO7rJsLrHkC9Jm1HBnObtb2HLQziNC_DUShZZgoRE4At1vwU-2VIT95OWnjJ8yX6TGWCL4qtgam7aqHLe-H4UuVA6PL6Lx1VP0qECro",
-  },
-  {
-    name: "Marcus Thorne",
-    role: "Principal UX Designer",
-    department: "Product Design",
-    departmentClass: "bg-indigo-50 text-indigo-600",
-    completionRate: "94.1%",
-    rating: 4.5,
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAnxZE-3srGtxlxKE_Nluj1acGUzuhz83ftSqT8bR1J2QFjV5Mnqe3eyhi-z2S0ApypQkP_K_Rdh_8wFv6MqrJck71dYRmzcw1uBbymBYYnWNuzWtiOl9HCNChpmVlbnR-QZ19lYllMJ4v2-lwTHSzXtmTVJjzmTnKdk0IZIUeCDRuPuSbnvFzaZH1DXJ9nQczCvnRPwROtPRPZbalzqCxC8R2KtSqDTkrONkdwzutk2ji7PQBxyLZJInahr5LSJjFv0nsNByZk6ow",
-  },
-  {
-    name: "Elena Gomez",
-    role: "BI Data Analyst",
-    department: "Analytics",
-    departmentClass: "bg-emerald-50 text-emerald-600",
-    completionRate: "91.8%",
-    rating: 4,
-    avatar:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuAf63ZyfOVVwHlvCp8zNpMbYZ68S1WipILm9JAuZ5csOAmYrOH30d2d_r9vKG9d8p_79Jn7Lnc8FqGF-E_uwYcIoPrgpsF0pdRmt29dmUNgAnoHbYUgf3S648WqM4uW7wYUtuZSc55gD3-LCU8DB4RcyEA3SIqS5OG0Yn2_wLIQ3WQu9jxlHQyoe2pw4rUJANqtkqbBYPaKDJOiqiWh-rXhqn-LkCqIqxZYpHIJGC0cOkAreRkSnDTPr4YupqwWNzvmwYt4d7krDVM",
+    id: "salary-distribution",
+    name: "Salary Distribution Report",
+    description:
+      "Review salary bands and compensation spread for equitable planning.",
   },
 ];

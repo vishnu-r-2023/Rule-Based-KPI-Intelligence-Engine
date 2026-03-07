@@ -29,12 +29,24 @@ export const NAV_ITEMS = Object.freeze([
     icon: "account_balance_wallet",
     label: "Finance Overview",
     page: "finance",
-    roles: [USER_ROLES.ADMIN],
+    roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER],
   },
   {
     icon: "description",
     label: "Reports",
     page: "reports",
+    roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],
+  },
+  {
+    icon: "upload_file",
+    label: "Dataset Upload",
+    page: "upload",
+    roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],
+  },
+  {
+    icon: "account_circle",
+    label: "Profile",
+    page: "profile",
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],
   },
 ]);
@@ -45,6 +57,8 @@ export const PAGE_TO_HASH = Object.freeze({
   performance: "#performance",
   finance: "#finance",
   reports: "#reports",
+  upload: "#dataset-upload",
+  profile: "#profile",
 });
 
 const HASH_TO_PAGE = Object.freeze({
@@ -56,6 +70,10 @@ const HASH_TO_PAGE = Object.freeze({
   "finance-overview": "finance",
   "financial-overview": "finance",
   reports: "reports",
+  upload: "upload",
+  "dataset-upload": "upload",
+  dataset: "upload",
+  profile: "profile",
 });
 
 export const normalizeHash = (hash) =>

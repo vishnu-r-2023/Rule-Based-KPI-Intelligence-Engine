@@ -1,10 +1,23 @@
 import { ThemeProvider } from "./ThemeContext";
-import { UserProvider } from "./UserContext";
+import { UserProvider, useUser } from "./UserContext";
+import { AnalyticsProvider } from "./AnalyticsContext";
+
+function AnalyticsGate({ children }) {
+  const { isAuthenticated } = useUser();
+
+  if (!isAuthenticated) {
+    return children;
+  }
+
+  return <AnalyticsProvider>{children}</AnalyticsProvider>;
+}
 
 function AppProviders({ children }) {
   return (
     <ThemeProvider>
-      <UserProvider>{children}</UserProvider>
+      <UserProvider>
+        <AnalyticsGate>{children}</AnalyticsGate>
+      </UserProvider>
     </ThemeProvider>
   );
 }

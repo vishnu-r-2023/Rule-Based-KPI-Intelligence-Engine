@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { useUser } from "../../context/UserContext";
+import UserAvatarFallbackIcon from "./UserAvatarFallbackIcon";
 
 function UserProfileBadge({ compact = false }) {
   const { user } = useUser();
@@ -15,11 +16,17 @@ function UserProfileBadge({ compact = false }) {
         </p>
       </div>
       <div className="h-10 w-10 overflow-hidden rounded-full border-2 border-white/70 bg-slate-200 shadow-sm dark:border-slate-700 dark:bg-slate-700">
-        <img
-          src={user.avatar}
-          alt={`Profile for ${user.name}`}
-          className="h-full w-full object-cover"
-        />
+        {user.avatar ? (
+          <img
+            src={user.avatar}
+            alt={`Profile for ${user.name}`}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <UserAvatarFallbackIcon className="h-5 w-5 text-slate-700 dark:text-slate-100" />
+          </div>
+        )}
       </div>
     </div>
   );
