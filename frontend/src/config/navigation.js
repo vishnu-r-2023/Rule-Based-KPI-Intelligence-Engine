@@ -8,7 +8,7 @@ export const DEFAULT_PAGE = "dashboard";
 
 export const NAV_ITEMS = Object.freeze([
   {
-    icon: "dashboard",
+    icon: "analytics",
     label: "Dashboard",
     page: "dashboard",
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],
@@ -26,7 +26,7 @@ export const NAV_ITEMS = Object.freeze([
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER],
   },
   {
-    icon: "account_balance_wallet",
+    icon: "account_balance",
     label: "Finance Overview",
     page: "finance",
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER],
@@ -38,7 +38,7 @@ export const NAV_ITEMS = Object.freeze([
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],
   },
   {
-    icon: "upload_file",
+    icon: "cloud_upload",
     label: "Dataset Upload",
     page: "upload",
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],

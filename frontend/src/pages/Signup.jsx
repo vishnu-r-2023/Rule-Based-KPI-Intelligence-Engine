@@ -8,7 +8,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const ROLE_OPTIONS = [USER_ROLES.EMPLOYEE, USER_ROLES.MANAGER, USER_ROLES.ADMIN];
 const FIELD_LABEL_CLASS = "text-xs font-semibold uppercase tracking-[0.13em] text-slate-300";
 const FIELD_INPUT_CLASS =
-  "h-11 w-full rounded-xl border border-white/25 bg-white/[0.07] px-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-emerald-300/80 focus:bg-white/[0.11] focus:ring-2 focus:ring-emerald-300/20";
+  "h-9 w-full rounded-xl border border-white/25 bg-white/[0.07] px-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-emerald-300/80 focus:bg-white/[0.11] focus:ring-2 focus:ring-emerald-300/20";
 const FIELD_ERROR_CLASS = "text-xs font-medium text-rose-200";
 
 function Signup({ onSwitchToLogin = () => {} }) {
@@ -119,7 +119,7 @@ function Signup({ onSwitchToLogin = () => {} }) {
       />
       <div className="absolute inset-0 bg-slate-950/65" />
 
-      <div className="relative z-10 w-full max-w-[460px]">
+      <div className="relative z-10 w-full max-w-[380px]">
         <AuthCard
           title="Create Account"
           subtitle={cardSubtitle}
@@ -132,7 +132,7 @@ function Signup({ onSwitchToLogin = () => {} }) {
           onFooterAction={onSwitchToLogin}
           dense
         >
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-2">
             <label className="block space-y-1">
               <span className={FIELD_LABEL_CLASS}>Name</span>
               <input
