@@ -42,7 +42,7 @@ async function start() {
   await connectDatabase(mongoUri);
 
   app.listen(port, () => {
-    console.log(`HR analytics backend listening on http://localhost:${port}`);
+    console.log(`Backend listening on http://localhost:${port}`);
   });
 }
 
