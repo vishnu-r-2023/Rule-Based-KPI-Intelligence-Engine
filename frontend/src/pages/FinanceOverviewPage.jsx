@@ -32,7 +32,7 @@ function FinanceOverviewPage() {
         <MetricCard
           title="Total Revenue"
           value={formatters.currency(financeKpis.revenue)}
-          icon="paid"
+          icon="currency_rupee"
           trend="+6.2%"
           trendPositive
           comparison="vs previous period"

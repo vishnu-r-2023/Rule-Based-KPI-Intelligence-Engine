@@ -50,9 +50,39 @@ const toNumber = (value) => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 
+const excelSerialToDate = (serial) => {
+  if (!Number.isFinite(serial)) return null;
+
+  const utcDays = Math.floor(serial - 25569);
+  const utcValue = utcDays * 86400;
+  const fractionalDay = serial - Math.floor(serial) + 0.0000001;
+  const totalSeconds = Math.floor(86400 * fractionalDay);
+  const seconds = totalSeconds % 60;
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor(totalSeconds / 60) % 60;
+  const date = new Date(utcValue * 1000);
+
+  return new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), hours, minutes, seconds)
+  );
+};
+
 const toDate = (value) => {
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value;
+  }
+
+  if (typeof value === "number") {
+    return excelSerialToDate(value);
+  }
+
   const raw = String(value || "").trim();
   if (!raw) return null;
+
+  const numeric = Number(raw);
+  if (Number.isFinite(numeric) && /^[0-9]+(?:\.[0-9]+)?$/.test(raw)) {
+    return excelSerialToDate(numeric);
+  }
 
   const date = new Date(raw);
   return Number.isNaN(date.getTime()) ? null : date;

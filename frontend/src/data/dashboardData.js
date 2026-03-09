@@ -9,6 +9,14 @@ export const REQUIRED_DATASET_FIELDS = [
   "Attrition",
 ];
 
+export const REQUIRED_WORKBOOK_SHEETS = [
+  "HR_Employees",
+  "Sales",
+  "Marketing",
+  "Finance",
+  "Operations",
+];
+
 export const DATE_RANGE_OPTIONS = [
   { value: "30d", label: "Last 30 days", months: 3 },
   { value: "90d", label: "Last 90 days", months: 6 },
@@ -41,7 +49,7 @@ export const VIBRANT_CHART_COLORS = [
 export const KPI_ICON_MAP = {
   totalEmployees: "group",
   attritionRate: "person_remove",
-  averageSalary: "payments",
+  averageSalary: "currency_rupee",
   averageJobSatisfaction: "sentiment_satisfied",
   averagePerformanceRating: "workspace_premium",
   averageWorkLifeBalance: "balance",

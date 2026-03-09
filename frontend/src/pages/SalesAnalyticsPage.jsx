@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -28,6 +29,20 @@ function SalesAnalyticsPage() {
     formatters,
   } = useAnalytics();
   const { isDark } = useTheme();
+
+  const targetGapTrend = useMemo(
+    () =>
+      monthlyRevenueTrend.map((item) => {
+        const variance = Number(item.revenue || 0) - Number(item.target || 0);
+
+        return {
+          month: item.month,
+          surplus: variance > 0 ? variance : 0,
+          shortfall: variance < 0 ? Math.abs(variance) : 0,
+        };
+      }),
+    [monthlyRevenueTrend]
+  );
 
   const averageMonthlyRevenue =
     monthlyRevenueTrend.length === 0
@@ -159,7 +174,7 @@ function SalesAnalyticsPage() {
         </ChartPanel>
       </section>
 
-      <section>
+      <section className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartPanel title="Revenue Contribution" subtitle="Share of revenue by department" requiresDataset>
           <div className="h-[320px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -184,6 +199,26 @@ function SalesAnalyticsPage() {
                 <Tooltip content={renderRevenueTooltip} />
                 <Legend verticalAlign="bottom" height={24} />
               </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </ChartPanel>
+
+        <ChartPanel
+          title="Target Gap Analysis"
+          subtitle="Monthly surplus and shortfall relative to target"
+          requiresDataset
+        >
+          <div className="h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={targetGapTrend} margin={{ top: 10, right: 16, left: 8, bottom: 8 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="month" />
+                <YAxis tickFormatter={(value) => formatters.compactCurrency(value)} />
+                <Tooltip formatter={(value) => formatters.currency(value)} />
+                <Legend />
+                <Bar dataKey="surplus" fill="#10b981" radius={[6, 6, 0, 0]} name="Surplus" />
+                <Bar dataKey="shortfall" fill="#f97316" radius={[6, 6, 0, 0]} name="Shortfall" />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </ChartPanel>

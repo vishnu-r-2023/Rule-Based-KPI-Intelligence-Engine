@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import ChartPanel from "../components/common/ChartPanel";
 import { useAnalytics } from "../context/AnalyticsContext";
-import { REQUIRED_DATASET_FIELDS } from "../data/dashboardData";
+import { REQUIRED_DATASET_FIELDS, REQUIRED_WORKBOOK_SHEETS } from "../data/dashboardData";
 
 function DatasetUploadPage() {
   const fileInputRef = useRef(null);
@@ -39,7 +39,7 @@ function DatasetUploadPage() {
     if (result.success) {
       setUploadStatus({
         tone: "success",
-        message: `Dataset imported successfully with ${result.count} valid employee records.`,
+        message: `Dataset imported successfully with ${result.count} records across workbook sheets.`,
       });
       return;
     }
@@ -91,7 +91,10 @@ function DatasetUploadPage() {
   return (
     <div className="mx-auto max-w-[1700px] space-y-6 p-4 sm:p-6 lg:p-8">
       <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.5fr_1fr]">
-        <ChartPanel title="Upload HR Dataset" subtitle="Drag and drop CSV or Excel files for automatic analytics">
+        <ChartPanel
+          title="Upload Enterprise Workbook"
+          subtitle="Upload the multi-sheet workbook for HR, Sales, Marketing, Finance, and Operations analytics"
+        >
           <div
             onDragOver={(event) => {
               event.preventDefault();
@@ -109,7 +112,7 @@ function DatasetUploadPage() {
               <span className="material-symbols-outlined text-[28px]">cloud_upload</span>
             </div>
             <p className="text-base font-semibold text-slate-900">Drop your dataset file here</p>
-            <p className="mt-1 text-sm text-slate-500">Supports .csv, .xlsx, and .xls files</p>
+            <p className="mt-1 text-sm text-slate-500">Supports legacy HR uploads and enterprise `.xlsx` / `.xls` workbooks</p>
 
             <input
               ref={fileInputRef}
@@ -153,8 +156,19 @@ function DatasetUploadPage() {
           )}
         </ChartPanel>
 
-         <ChartPanel title="Dataset Requirements" subtitle="Required columns before processing">
+         <ChartPanel title="Workbook Requirements" subtitle="Required sheets and core HR fields before processing">
           <div className="flex flex-wrap gap-2">
+            {REQUIRED_WORKBOOK_SHEETS.map((sheetName) => (
+              <span
+                key={sheetName}
+                className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700"
+              >
+                {sheetName}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2">
             {REQUIRED_DATASET_FIELDS.map((field) => (
               <span
                 key={field}
@@ -172,8 +186,14 @@ function DatasetUploadPage() {
                 {datasetMeta.fileName}
               </p>
               <p>
-                <span className="font-semibold text-slate-900">Rows Loaded:</span>{" "}
+                <span className="font-semibold text-slate-900">Records Loaded:</span>{" "}
                 {datasetMeta.recordCount}
+              </p>
+              <p>
+                <span className="font-semibold text-slate-900">Sheet Counts:</span>{" "}
+                HR {datasetMeta.sheetCounts?.hrEmployees || 0} | Sales {datasetMeta.sheetCounts?.sales || 0} |
+                Marketing {datasetMeta.sheetCounts?.marketing || 0} | Finance {datasetMeta.sheetCounts?.finance || 0} |
+                Operations {datasetMeta.sheetCounts?.operations || 0}
               </p>
               <p>
                 <span className="font-semibold text-slate-900">Uploaded At:</span>{" "}

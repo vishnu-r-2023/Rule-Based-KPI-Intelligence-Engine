@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { randomUUID } from "crypto";
+import { BusinessDataset } from "../models/BusinessDataset.js";
 import { Employee } from "../models/Employee.js";
 import { DatasetMeta } from "../models/DatasetMeta.js";
 import {
@@ -9,6 +10,12 @@ import {
   parseDatasetBuffer,
   REQUIRED_DATASET_FIELDS,
 } from "../utils/datasetParser.js";
+import {
+  looksLikeEnterpriseWorkbook,
+  normalizeEnterpriseWorkbook,
+  parseEnterpriseWorkbookBuffer,
+  REQUIRED_ENTERPRISE_SHEETS,
+} from "../utils/enterpriseDatasetParser.js";
 
 const router = express.Router();
 
@@ -27,6 +34,14 @@ const DEFAULT_META = {
   source: "empty",
   validationMessages: [],
   isActive: false,
+  sheetCounts: {
+    hrEmployees: 0,
+    sales: 0,
+    marketing: 0,
+    finance: 0,
+    operations: 0,
+    total: 0,
+  },
 };
 
 const getLegacyMetaKey = (userId) => `active:${userId}`;
@@ -62,6 +77,74 @@ const toClientEmployee = (employee) => ({
   departmentExpense: employee.departmentExpense,
 });
 
+const toClientSalesRecord = (record) => ({
+  salesDate: record.salesDate,
+  department: record.department,
+  revenue: record.revenue,
+  target: record.target,
+  orders: record.orders,
+  unitsSold: record.unitsSold,
+  customers: record.customers,
+  region: record.region,
+  salesChannel: record.salesChannel,
+  productCategory: record.productCategory,
+  salesRep: record.salesRep,
+});
+
+const toClientMarketingRecord = (record) => ({
+  marketingDate: record.marketingDate,
+  channel: record.channel,
+  campaign: record.campaign,
+  impressions: record.impressions,
+  clicks: record.clicks,
+  visitors: record.visitors,
+  leads: record.leads,
+  conversions: record.conversions,
+  spend: record.spend,
+  revenue: record.revenue,
+});
+
+const toClientFinanceRecord = (record) => ({
+  financeDate: record.financeDate,
+  department: record.department,
+  revenue: record.revenue,
+  expenses: record.expenses,
+  personnelBudget: record.personnelBudget,
+  trainingBudget: record.trainingBudget,
+  operationsBudget: record.operationsBudget,
+  netProfit: record.netProfit,
+});
+
+const toClientOperationsRecord = (record) => ({
+  operationsDate: record.operationsDate,
+  department: record.department,
+  processName: record.processName,
+  shift: record.shift,
+  unitsPlanned: record.unitsPlanned,
+  unitsProcessed: record.unitsProcessed,
+  throughput: record.throughput,
+  capacityUnits: record.capacityUnits,
+  utilizationPct: record.utilizationPct,
+  cycleTimeMinutes: record.cycleTimeMinutes,
+  downtimeMinutes: record.downtimeMinutes,
+  defectRatePct: record.defectRatePct,
+  reworkCount: record.reworkCount,
+  onTimeDeliveryPct: record.onTimeDeliveryPct,
+  slaCompliancePct: record.slaCompliancePct,
+  inventoryLevel: record.inventoryLevel,
+  backlogVolume: record.backlogVolume,
+  operatingCost: record.operatingCost,
+});
+
+const normalizeSheetCounts = (sheetCounts = {}) => ({
+  hrEmployees: Number(sheetCounts.hrEmployees || 0),
+  sales: Number(sheetCounts.sales || 0),
+  marketing: Number(sheetCounts.marketing || 0),
+  finance: Number(sheetCounts.finance || 0),
+  operations: Number(sheetCounts.operations || 0),
+  total: Number(sheetCounts.total || 0),
+});
+
 const toClientMeta = (meta) => {
   if (!meta) {
     return {
@@ -78,6 +161,7 @@ const toClientMeta = (meta) => {
     source: meta.source || "uploaded",
     validationMessages: meta.validationMessages || [],
     isActive: Boolean(meta.isActive),
+    sheetCounts: normalizeSheetCounts(meta.sheetCounts),
   };
 };
 
@@ -88,14 +172,20 @@ const toDatasetSummary = (meta) => ({
   recordCount: Number(meta.recordCount || 0),
   source: meta.source || "uploaded",
   isActive: Boolean(meta.isActive),
+  sheetCounts: normalizeSheetCounts(meta.sheetCounts),
 });
 
 const buildResponsePayload = (state) => ({
   employees: state.clientEmployees,
+  salesRecords: state.salesRecords,
+  marketingRecords: state.marketingRecords,
+  financeRecords: state.financeRecords,
+  operationsRecords: state.operationsRecords,
   datasetMeta: state.datasetMeta,
   previewRows: makePreviewRowsFromEmployees(state.clientEmployees),
   validationMessages: state.validationMessages || [],
   requiredFields: REQUIRED_DATASET_FIELDS,
+  requiredSheets: REQUIRED_ENTERPRISE_SHEETS,
   datasets: state.datasets,
   activeDatasetId: state.activeDatasetId,
 });
@@ -112,6 +202,11 @@ const migrateLegacyActiveMeta = async (userId) => {
   legacyMeta.datasetId = datasetId;
   legacyMeta.isActive = true;
   legacyMeta.source = legacyMeta.source || (Number(legacyMeta.recordCount || 0) > 0 ? "uploaded" : "empty");
+  legacyMeta.sheetCounts = normalizeSheetCounts({
+    ...(legacyMeta.sheetCounts || {}),
+    hrEmployees: Number(legacyMeta.recordCount || 0),
+    total: Number(legacyMeta.recordCount || 0),
+  });
 
   await legacyMeta.save();
   await Employee.updateMany(getOrphanDatasetQuery(userId), { $set: { datasetId } });
@@ -174,6 +269,14 @@ const getActiveDatasetMeta = async (userId) => {
     recordCount: orphanCount,
     source: "uploaded",
     validationMessages: ["Recovered metadata from existing employee records."],
+    sheetCounts: {
+      hrEmployees: orphanCount,
+      sales: 0,
+      marketing: 0,
+      finance: 0,
+      operations: 0,
+      total: orphanCount,
+    },
   });
 
   return recoveredMeta.toObject();
@@ -202,6 +305,7 @@ const getAnalyticsState = async (userId) => {
   const activeMeta = await getActiveDatasetMeta(userId);
 
   let employees = [];
+  let businessDataset = null;
   if (activeMeta?.datasetId) {
     employees = await Employee.find({
       ownerUserId: userId,
@@ -225,21 +329,47 @@ const getAnalyticsState = async (userId) => {
       }
     }
 
-    if (Number(activeMeta.recordCount || 0) !== employees.length) {
+    businessDataset = await BusinessDataset.findOne({
+      ownerUserId: userId,
+      datasetId: activeMeta.datasetId,
+    }).lean();
+
+    const computedSheetCounts = businessDataset?.sheetCounts
+      ? normalizeSheetCounts(businessDataset.sheetCounts)
+      : normalizeSheetCounts({
+          ...(activeMeta.sheetCounts || {}),
+          hrEmployees: employees.length,
+          total: employees.length,
+        });
+    const computedRecordCount = computedSheetCounts.total || employees.length;
+
+    if (
+      Number(activeMeta.recordCount || 0) !== computedRecordCount ||
+      JSON.stringify(normalizeSheetCounts(activeMeta.sheetCounts)) !== JSON.stringify(computedSheetCounts)
+    ) {
       await DatasetMeta.updateOne(
         { ownerUserId: userId, datasetId: activeMeta.datasetId },
-        { $set: { recordCount: employees.length } }
+        { $set: { recordCount: computedRecordCount, sheetCounts: computedSheetCounts } }
       );
-      activeMeta.recordCount = employees.length;
+      activeMeta.recordCount = computedRecordCount;
+      activeMeta.sheetCounts = computedSheetCounts;
     }
   }
 
   const clientEmployees = employees.map(toClientEmployee);
+  const salesRecords = (businessDataset?.salesRecords || []).map(toClientSalesRecord);
+  const marketingRecords = (businessDataset?.marketingRecords || []).map(toClientMarketingRecord);
+  const financeRecords = (businessDataset?.financeRecords || []).map(toClientFinanceRecord);
+  const operationsRecords = (businessDataset?.operationsRecords || []).map(toClientOperationsRecord);
   const datasetMeta = toClientMeta(activeMeta);
   const datasets = await getDatasets(userId);
 
   return {
     clientEmployees,
+    salesRecords,
+    marketingRecords,
+    financeRecords,
+    operationsRecords,
     datasetMeta,
     validationMessages: datasetMeta.validationMessages || [],
     datasets,
@@ -280,8 +410,41 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
       });
     }
 
-    const rows = parseDatasetBuffer(req.file.buffer, extension);
-    const parsed = normalizeRowsToEmployees(rows);
+    let parsed;
+    const legacyParsed = (result) => ({
+      blocking: result.blocking,
+      issues: result.issues,
+      previewRows: result.previewRows,
+      employees: result.employees,
+      salesRecords: [],
+      marketingRecords: [],
+      financeRecords: [],
+      operationsRecords: [],
+      sheetCounts: {
+        hrEmployees: result.employees.length,
+        sales: 0,
+        marketing: 0,
+        finance: 0,
+        operations: 0,
+        total: result.employees.length,
+      },
+      source: "uploaded",
+    });
+
+    if (["xlsx", "xls"].includes(extension || "")) {
+      const workbook = parseEnterpriseWorkbookBuffer(req.file.buffer, extension);
+      if (workbook && looksLikeEnterpriseWorkbook(workbook)) {
+        parsed = {
+          ...normalizeEnterpriseWorkbook(workbook),
+          source: "enterprise-workbook",
+        };
+      }
+    }
+
+    if (!parsed) {
+      const rows = parseDatasetBuffer(req.file.buffer, extension);
+      parsed = legacyParsed(normalizeRowsToEmployees(rows));
+    }
 
     if (parsed.blocking) {
       return res.status(400).json({
@@ -311,6 +474,23 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
       { ordered: false }
     );
 
+    if (
+      parsed.salesRecords.length ||
+      parsed.marketingRecords.length ||
+      parsed.financeRecords.length ||
+      parsed.operationsRecords.length
+    ) {
+      await BusinessDataset.create({
+        ownerUserId: userId,
+        datasetId,
+        salesRecords: parsed.salesRecords,
+        marketingRecords: parsed.marketingRecords,
+        financeRecords: parsed.financeRecords,
+        operationsRecords: parsed.operationsRecords,
+        sheetCounts: parsed.sheetCounts,
+      });
+    }
+
     await DatasetMeta.create({
       key: getDatasetMetaKey(userId, datasetId),
       ownerUserId: userId,
@@ -318,9 +498,10 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
       isActive: true,
       fileName: req.file.originalname,
       uploadedAt: new Date(),
-      recordCount: parsed.employees.length,
-      source: "uploaded",
+      recordCount: parsed.sheetCounts.total,
+      source: parsed.source || "uploaded",
       validationMessages: parsed.issues,
+      sheetCounts: parsed.sheetCounts,
     });
 
     const state = await getAnalyticsState(userId);
@@ -328,7 +509,7 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
     res.json({
       success: true,
       issues: parsed.issues,
-      count: state.clientEmployees.length,
+      count: state.datasetMeta.recordCount,
       ...buildResponsePayload(state),
     });
   } catch (error) {
@@ -399,6 +580,10 @@ const deleteDatasetById = async (userId, datasetId) => {
 
   await Promise.all([
     Employee.deleteMany({
+      ownerUserId: userId,
+      datasetId,
+    }),
+    BusinessDataset.deleteMany({
       ownerUserId: userId,
       datasetId,
     }),

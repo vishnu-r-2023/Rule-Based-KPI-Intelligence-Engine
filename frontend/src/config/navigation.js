@@ -32,6 +32,18 @@ export const NAV_ITEMS = Object.freeze([
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER],
   },
   {
+    icon: "engineering",
+    label: "Operations",
+    page: "operations",
+    roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER],
+  },
+  {
+    icon: "campaign",
+    label: "Marketing Analytics",
+    page: "marketing",
+    roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER],
+  },
+  {
     icon: "description",
     label: "Reports",
     page: "reports",
@@ -48,12 +60,14 @@ export const NAV_ITEMS = Object.freeze([
     label: "Profile",
     page: "profile",
     roles: [USER_ROLES.ADMIN, USER_ROLES.MANAGER, USER_ROLES.EMPLOYEE],
-  },
+  }
 ]);
 
 export const PAGE_TO_HASH = Object.freeze({
   dashboard: "#dashboard",
   sales: "#sales",
+  marketing: "#marketing",
+  operations: "#operations",
   performance: "#performance",
   finance: "#finance",
   reports: "#reports",
@@ -64,6 +78,11 @@ export const PAGE_TO_HASH = Object.freeze({
 const HASH_TO_PAGE = Object.freeze({
   dashboard: "dashboard",
   sales: "sales",
+  "sales-analytics": "sales",
+  marketing: "marketing",
+  "marketing-analytics": "marketing",
+  operations: "operations",
+  "operations-analytics": "operations",
   performance: "performance",
   "employee-performance": "performance",
   finance: "finance",

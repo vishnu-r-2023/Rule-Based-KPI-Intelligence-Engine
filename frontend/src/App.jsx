@@ -16,6 +16,8 @@ import { useUser } from "./context/UserContext";
 
 const OverviewPage = lazy(() => import("./pages/OverviewPage"));
 const SalesAnalyticsPage = lazy(() => import("./pages/SalesAnalyticsPage"));
+const MarketingAnalyticsPage = lazy(() => import("./pages/MarketingAnalyticsPage"));
+const OperationsPage = lazy(() => import("./pages/OperationsPage"));
 const EmployeePerformancePage = lazy(() => import("./pages/EmployeePerformancePage"));
 const FinanceOverviewPage = lazy(() => import("./pages/FinanceOverviewPage"));
 const ReportsPage = lazy(() => import("./pages/ReportsPage"));
@@ -27,6 +29,8 @@ const pageToComponentMap = {
   sales: SalesAnalyticsPage,
   performance: EmployeePerformancePage,
   finance: FinanceOverviewPage,
+  marketing: MarketingAnalyticsPage,
+  operations: OperationsPage,
   reports: ReportsPage,
   upload: DatasetUploadPage,
   profile: ProfilePage,
