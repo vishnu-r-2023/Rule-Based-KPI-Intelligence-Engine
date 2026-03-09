@@ -47,12 +47,18 @@ function ReportsPage() {
   );
 
   const handleExportExcel = async () => {
-    const XLSX = await import("xlsx");
-    const worksheet = XLSX.utils.json_to_sheet(activeReportRows);
-    const workbook = XLSX.utils.book_new();
+    const excelModule = await import("write-excel-file");
+    const writeXlsxFile = excelModule.default || excelModule;
+    const headers = Object.keys(activeReportRows[0] || { Metric: "" });
+    const rows = [
+      headers.map((header) => ({ value: header })),
+      ...activeReportRows.map((row) => headers.map((header) => ({ value: row[header] ?? "" }))),
+    ];
 
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Report");
-    XLSX.writeFile(workbook, `${selectedReport.id}-report.xlsx`);
+    await writeXlsxFile(rows, {
+      fileName: `${selectedReport.id}-report.xlsx`,
+      sheet: "Report",
+    });
   };
 
   const handleExportPdf = async () => {

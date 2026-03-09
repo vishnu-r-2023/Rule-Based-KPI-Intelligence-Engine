@@ -403,10 +403,17 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
       .pop()
       ?.toLowerCase();
 
-    if (!["csv", "xlsx", "xls"].includes(extension || "")) {
+    if (extension === "xls") {
       return res.status(400).json({
         success: false,
-        issues: ["Unsupported file type. Please upload .csv, .xlsx, or .xls."],
+        issues: ["Legacy `.xls` files are no longer supported. Please upload a `.csv` or `.xlsx` file."],
+      });
+    }
+
+    if (!["csv", "xlsx"].includes(extension || "")) {
+      return res.status(400).json({
+        success: false,
+        issues: ["Unsupported file type. Please upload a `.csv` or `.xlsx` file."],
       });
     }
 
@@ -431,8 +438,8 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
       source: "uploaded",
     });
 
-    if (["xlsx", "xls"].includes(extension || "")) {
-      const workbook = parseEnterpriseWorkbookBuffer(req.file.buffer, extension);
+    if (extension === "xlsx") {
+      const workbook = await parseEnterpriseWorkbookBuffer(req.file.buffer, extension);
       if (workbook && looksLikeEnterpriseWorkbook(workbook)) {
         parsed = {
           ...normalizeEnterpriseWorkbook(workbook),
@@ -442,7 +449,7 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
     }
 
     if (!parsed) {
-      const rows = parseDatasetBuffer(req.file.buffer, extension);
+      const rows = await parseDatasetBuffer(req.file.buffer, extension);
       parsed = legacyParsed(normalizeRowsToEmployees(rows));
     }
 
@@ -513,6 +520,16 @@ router.post("/dataset/upload", upload.single("file"), async (req, res, next) => 
       ...buildResponsePayload(state),
     });
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === "Unable to read the Excel workbook. Save the file as .xlsx and try again."
+    ) {
+      return res.status(400).json({
+        success: false,
+        issues: [error.message],
+      });
+    }
+
     return next(error);
   }
 });

@@ -112,12 +112,12 @@ function DatasetUploadPage() {
               <span className="material-symbols-outlined text-[28px]">cloud_upload</span>
             </div>
             <p className="text-base font-semibold text-slate-900">Drop your dataset file here</p>
-            <p className="mt-1 text-sm text-slate-500">Supports legacy HR uploads and enterprise `.xlsx` / `.xls` workbooks</p>
+            <p className="mt-1 text-sm text-slate-500">Supports legacy HR `.csv` uploads and enterprise `.xlsx` workbooks</p>
 
             <input
               ref={fileInputRef}
               type="file"
-              accept=".csv,.xlsx,.xls"
+              accept=".csv,.xlsx"
               className="hidden"
               onChange={onInputChange}
             />

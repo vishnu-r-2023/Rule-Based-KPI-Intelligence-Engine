@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import { loadXlsxWorkbook } from "./excelWorkbook.js";
 import { normalizeRowsToEmployees } from "./datasetParser.js";
 
 export const REQUIRED_ENTERPRISE_SHEETS = Object.freeze([
@@ -164,7 +164,7 @@ const buildHeaderMap = (rows) => {
 };
 
 const resolveSheetName = (workbook, sheetName) =>
-  workbook.SheetNames.find((name) => normalizeHeader(name) === normalizeHeader(sheetName)) || null;
+  workbook.sheetNames.find((name) => normalizeHeader(name) === normalizeHeader(sheetName)) || null;
 
 const getSheetRows = (workbook, sheetName) => {
   const resolvedSheetName = resolveSheetName(workbook, sheetName);
@@ -172,7 +172,7 @@ const getSheetRows = (workbook, sheetName) => {
     return [];
   }
 
-  return XLSX.utils.sheet_to_json(workbook.Sheets[resolvedSheetName], { defval: "" });
+  return workbook.sheets[resolvedSheetName] || [];
 };
 
 const validateSheetHeaders = (rows, sheetName) => {
@@ -398,19 +398,12 @@ const normalizeOperationsRows = (rows) => {
   };
 };
 
-export const parseEnterpriseWorkbookBuffer = (fileBuffer, extension) => {
-  if (!["xlsx", "xls"].includes(extension || "")) {
+export const parseEnterpriseWorkbookBuffer = async (fileBuffer, extension) => {
+  if (extension !== "xlsx") {
     return null;
   }
 
-  const workbook = XLSX.read(fileBuffer, { type: "buffer" });
-  const sheetRows = {};
-
-  workbook.SheetNames.forEach((sheetName) => {
-    sheetRows[sheetName] = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: "" });
-  });
-
-  return workbook;
+  return loadXlsxWorkbook(fileBuffer);
 };
 
 export const looksLikeEnterpriseWorkbook = (workbook) =>

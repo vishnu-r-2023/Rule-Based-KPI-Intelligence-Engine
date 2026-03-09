@@ -22,4 +22,4 @@ Server runs at `http://localhost:4000` by default.
 
 `Employee_ID, Department, JobRole, Age, MonthlyIncome, PerformanceRating, JobSatisfaction, Attrition`
 
-Accepted file types: `.csv`, `.xlsx`, `.xls`
+Accepted file types: `.csv`, `.xlsx`

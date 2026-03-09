@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import * as XLSX from "xlsx";
+import { loadXlsxWorkbook } from "./excelWorkbook.js";
 
 export const REQUIRED_DATASET_FIELDS = [
   "Employee_ID",
@@ -168,7 +168,7 @@ const mapEmployeePreviewRows = (employees) =>
     Attrition: employee.attrition ? "Yes" : "No",
   }));
 
-export const parseDatasetBuffer = (fileBuffer, extension) => {
+export const parseDatasetBuffer = async (fileBuffer, extension) => {
   if (extension === "csv") {
     const text = fileBuffer.toString("utf8");
     const result = Papa.parse(text, {
@@ -183,14 +183,11 @@ export const parseDatasetBuffer = (fileBuffer, extension) => {
     return result.data || [];
   }
 
-  if (extension === "xlsx" || extension === "xls") {
-    const workbook = XLSX.read(fileBuffer, { type: "buffer" });
-    const [firstSheetName] = workbook.SheetNames;
-    const sheet = workbook.Sheets[firstSheetName];
+  if (extension === "xlsx") {
+    const workbook = await loadXlsxWorkbook(fileBuffer);
+    const [firstSheetName] = workbook.sheetNames;
 
-    return XLSX.utils.sheet_to_json(sheet, {
-      defval: "",
-    });
+    return firstSheetName ? workbook.sheets[firstSheetName] || [] : [];
   }
 
   throw new Error("Unsupported file type.");
