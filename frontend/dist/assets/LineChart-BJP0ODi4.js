@@ -1,1 +1,0 @@
-import{r as a}from"./index-ZPy6G_jZ.js";import{Y as t,_ as o}from"./BarChart-DPq1PZ9l.js";var i=["axis"],s=a.forwardRef((r,e)=>a.createElement(t,{chartName:"LineChart",defaultTooltipEventType:"axis",validateTooltipEventTypes:i,tooltipPayloadSearcher:o,categoricalChartProps:r,ref:e}));export{s as L};

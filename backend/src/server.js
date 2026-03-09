@@ -12,11 +12,20 @@ const app = express();
 
 const port = Number(process.env.PORT || 4000);
 const mongoUri = process.env.MONGODB_URI;
-const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+const allowedOrigins = String(process.env.CLIENT_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 app.use(
   cors({
-    origin: clientOrigin.split(",").map((origin) => origin.trim()),
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`CORS blocked request from origin ${origin}. Add it to CLIENT_ORIGIN.`));
+    },
     credentials: true,
   })
 );
@@ -42,6 +51,8 @@ async function start() {
   await connectDatabase(mongoUri);
 
   app.listen(port, () => {
+    const originSummary = allowedOrigins.length ? allowedOrigins.join(", ") : "any origin";
+    console.log(`Allowed client origins: ${originSummary}`);
     console.log(`Backend listening on http://localhost:${port}`);
   });
 }

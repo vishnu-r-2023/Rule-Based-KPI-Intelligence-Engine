@@ -1,5 +1,12 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 const AUTH_STORAGE_KEY = "enterprise-dashboard-auth";
+const FRONTEND_ORIGIN =
+  typeof window !== "undefined" ? window.location.origin : "your frontend origin";
+
+const createNetworkError = () =>
+  new Error(
+    `Unable to reach ${API_BASE_URL}. Check VITE_API_BASE_URL and make sure backend CLIENT_ORIGIN allows ${FRONTEND_ORIGIN}.`
+  );
 
 const readStoredToken = () => {
   if (typeof window === "undefined") return null;
@@ -26,10 +33,17 @@ async function request(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+    });
+  } catch (error) {
+    const networkError = createNetworkError();
+    networkError.cause = error;
+    throw networkError;
+  }
 
   const payload = await response.json().catch(() => ({}));
 

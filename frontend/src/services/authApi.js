@@ -1,13 +1,27 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+const FRONTEND_ORIGIN =
+  typeof window !== "undefined" ? window.location.origin : "your frontend origin";
+
+const createNetworkError = () =>
+  new Error(
+    `Unable to reach ${API_BASE_URL}. Check VITE_API_BASE_URL and make sure backend CLIENT_ORIGIN allows ${FRONTEND_ORIGIN}.`
+  );
 
 async function request(path, options = {}) {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    });
+  } catch (error) {
+    const networkError = createNetworkError();
+    networkError.cause = error;
+    throw networkError;
+  }
 
   const payload = await response.json().catch(() => ({}));
 
