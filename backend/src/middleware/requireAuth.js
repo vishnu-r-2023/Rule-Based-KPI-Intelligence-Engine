@@ -1,7 +1,7 @@
 import { verifyAuthToken } from "../utils/authToken.js";
 
 const getAuthSecret = () =>
-  process.env.AUTH_TOKEN_SECRET || process.env.JWT_SECRET || "dev-auth-secret-change-me";
+  process.env.AUTH_TOKEN_SECRET || process.env.JWT_SECRET;
 
 const getBearerToken = (authorizationHeader) => {
   const [scheme, token] = String(authorizationHeader || "").split(" ");
